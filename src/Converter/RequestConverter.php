@@ -23,8 +23,12 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
+ * Abstract class converting request and his parameters to message with injected properties as setup
+ *
  * Class RequestConverter
  * @package ApiMessageDispatcher\Service
+ * @author Thomas Beauchataud
+ * @since 04.10.2020
  */
 abstract class RequestConverter implements ParamConverterInterface
 {
@@ -72,18 +76,18 @@ abstract class RequestConverter implements ParamConverterInterface
      * @inheritDoc
      * @throws ApiMessageDispatcherException
      */
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $object = null;
         foreach ($this->getSupportedMessages() as $objectClass => $name) {
             if ($configuration->getName() == $name) {
-                if (!class_exists($objectClass)) {
-                    $exceptionContent = "Impossible to instantiate the class " . $objectClass
-                        . " cause it doesn't exists";
-                    throw new ApiMessageDispatcherException($exceptionContent);
-                }
-                $object = new $objectClass();
+                $object = $this->instantiateClass($objectClass);
             }
+        }
+        if (!($object instanceof Message)) {
+            $exceptionContent = "Provided class in " . RequestConverter::class
+                . ":getSupportedMessages must be instance of " . Message::class;
+            throw new ApiMessageDispatcherException($exceptionContent);
         }
         $object = $this->enrichProperties($request, $object);
         $request->attributes->set($configuration->getName(), $object);
@@ -106,12 +110,12 @@ abstract class RequestConverter implements ParamConverterInterface
     /**
      * Set properties of the object with request parameters then return it
      *
-     * @param Request $request
-     * @param Message $object
-     * @return mixed
+     * @param Request $request The request with parameters
+     * @param Message $object The object to enrich
+     * @return object The object with all his properties injected
      * @throws ApiMessageDispatcherException
      */
-    protected function enrichProperties(Request $request, Message $object)
+    protected function enrichProperties(Request $request, Message $object): object
     {
         $parameters = json_decode($request->getContent(), true);
         try {
@@ -129,27 +133,13 @@ abstract class RequestConverter implements ParamConverterInterface
                     . $e->getMessage();
                 throw new ApiMessageDispatcherException($exceptionContent);
             }
+            /** @var InjectParameter $annotation */
             $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, InjectParameter::class);
             if (!is_null($annotation)) {
-                if ($parameters == null) {
-                    $exceptionContent = "Attempt to inject request parameters to the message " . get_class($object)
-                        . " but the request content is null";
-                    throw new ApiMessageDispatcherException($exceptionContent);
-                }
-                $methodName = "set" . ucwords($property->getName());
-                try {
-                    $reflectionClass->getMethod($methodName);
-                } catch (ReflectionException $e) {
-                    $exceptionContent = "The class using " . InjectParameter::class . " annotation on the property "
-                        . $property->getName() . " must have a setter : " . $methodName;
-                    throw new ApiMessageDispatcherException($exceptionContent);
-                }
-                if (!array_key_exists($property->getName(), $parameters)) {
-                    $exceptionContent = $property . " field doesn't exists in the request content";
-                    throw new ApiMessageDispatcherException($exceptionContent);
-                }
+                $this->validateParameters($parameters, $object, $property);
+                $this->validateAnnotation($annotation);
                 $parameter = $parameters[$property->getName()];
-                call_user_func(array($object, $methodName), $parameter);
+                $object = $this->injectProperty($property->getName(), $parameter, $object, $annotation);
             }
         }
         $this->log($parameters, $object);
@@ -157,10 +147,117 @@ abstract class RequestConverter implements ParamConverterInterface
     }
 
     /**
-     * @param array|null $parameters
-     * @param Message $message
+     * Validate the annotation content before trying to use it as injection rule
+     *
+     * @param InjectParameter $injectParameter The annotation to validate
+     * @throws ApiMessageDispatcherException If the annotation isn't valid
      */
-    protected function log(?array $parameters, Message $message)
+    protected function validateAnnotation(InjectParameter $injectParameter): void
+    {
+        if ($injectParameter->propertyName != null && $injectParameter->className == null) {
+            $exceptionContent = "Impossible to set the field propertyName on the annotation "
+                . get_class($injectParameter) . " when the the field className is null";
+            throw new ApiMessageDispatcherException($exceptionContent);
+        }
+        if ($injectParameter->doctrine && ($injectParameter->className == null || $injectParameter->propertyName == null)) {
+            $exceptionContent = "Impossible to set the field doctrine to true on the annotation "
+                . get_class($injectParameter) . " when the the field className or propertyName are null";
+            throw new ApiMessageDispatcherException($exceptionContent);
+        }
+    }
+
+    /**
+     * Validate the request parameters before trying to inject the property value
+     *
+     * @param array|null $parameters The request parameters
+     * @param Message $object The object where the property value will be injected
+     * @param ReflectionProperty $property The property to inject
+     * @throws ApiMessageDispatcherException If the parameters are null or it doesn't contains the wished property
+     */
+    protected function validateParameters(?array $parameters, Message $object, ReflectionProperty $property): void
+    {
+        if ($parameters == null) {
+            $exceptionContent = "Attempt to inject request parameters in the message " . get_class($object)
+                . " but the request content is null";
+            throw new ApiMessageDispatcherException($exceptionContent);
+        }
+        if (!array_key_exists($property->getName(), $parameters)) {
+            $exceptionContent = $property . " field doesn't exists in the request content";
+            throw new ApiMessageDispatcherException($exceptionContent);
+        }
+    }
+
+    /**
+     * Inject a property in an object
+     * If the annotation is not null, using the annotation injection rules
+     *
+     * @param string $propertyName The name of the property to inject
+     * @param mixed $propertyValue The value of the property to inject
+     * @param object $object The object owning the property to inject
+     * @param InjectParameter|null $annotation The InjectParameter annotation which override injection rules
+     * @return object Returning the object with injected property
+     * @throws ApiMessageDispatcherException If the object doesn't have a setter method for the property
+     */
+    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): object
+    {
+        if ($annotation == null || $annotation->propertyName == null) {
+            $methodName = "set" . ucwords($propertyName);
+            try {
+                $reflectionClass = new ReflectionClass($object);
+            } catch (ReflectionException $e) {
+                $exceptionContent = "Impossible to instantiate the class " . get_class($object) . " : " . $e->getMessage();
+                throw new ApiMessageDispatcherException($exceptionContent);
+            }
+            try {
+                $reflectionClass->getMethod($methodName);
+            } catch (ReflectionException $e) {
+                $exceptionContent = "The class " . get_class($object) . " doesn't have any setter for the property "
+                    . $propertyName . ", expecting a method named " . $methodName;
+                throw new ApiMessageDispatcherException($exceptionContent);
+            }
+            call_user_func(array($object, $methodName), $propertyValue);
+        } else {
+            $subObject = $this->instantiateClass($annotation->className);
+            if ($annotation->doctrine) {
+                $subObjects = $this->em->getRepository($annotation->className)
+                    ->findBy([$annotation->propertyName => $propertyValue]);
+                if (count($subObjects) == 1) {
+                    $object = $this->injectProperty($propertyName, $subObjects[0], $object);
+                } else {
+                    $object = $this->injectProperty($propertyName, $subObjects, $object);
+                }
+            } else {
+                $subObject = $this->injectProperty($annotation->propertyName, $subObject, $propertyValue);
+                $object = $this->injectProperty($propertyName, $subObject, $object);
+            }
+        }
+        return $object;
+    }
+
+    /**
+     * Instantiate a class with his name
+     *
+     * @param string $className The name of the class to instantiate
+     * @return object Return the instantiate class
+     * @throws ApiMessageDispatcherException If the class doesn't exists
+     */
+    protected function instantiateClass(string $className): object
+    {
+        if (!class_exists($className)) {
+            $exceptionContent = "Impossible to instantiate the class " . $className
+                . " cause it doesn't exists";
+            throw new ApiMessageDispatcherException($exceptionContent);
+        }
+        return new $className();
+    }
+
+    /**
+     * Log every conversion from request parameters to the instantiated object
+     *
+     * @param array|null $parameters The request parameters
+     * @param Message $message The message generated
+     */
+    protected function log(?array $parameters, Message $message): void
     {
         $content = "Request parameters " . $this->serializer->serialize($parameters, 'json')
             . " successfully converter to " . get_class($message) . " : "
@@ -171,8 +268,8 @@ abstract class RequestConverter implements ParamConverterInterface
     /**
      * Return the list of ParamConverter names with their associated object to instantiate
      *
-     * @return iterable
-     * @example yield myMessage => "App\Message\MyMessage"
+     * @return iterable The list of covered converter
+     * @example yield "myMessage" => "MyMessage::class"
      */
     protected abstract function getSupportedMessages(): iterable;
 

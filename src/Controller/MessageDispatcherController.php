@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Class MessageDispatcherController
  * @package ApiMessageDispatcher\Controller
+ * @author Thomas Beauchataud
+ * @since 04.10.2020
  */
 abstract class MessageDispatcherController extends AbstractController
 {

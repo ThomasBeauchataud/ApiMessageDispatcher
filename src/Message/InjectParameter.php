@@ -8,15 +8,23 @@ use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Annotation to use an a Message who will be converter from a Request threw a ParamConverter to autoload a field of
- * the message with the JSON content of the Request
+ * Annotation to use on properties of a Message object to inject the value of the request content in it
+ * threw a ParamConverter (extending RequestConverter)
  *
- * Class AutoLoad
+ * Class InjectParameter
  * @package ApiMessageDispatcher\Message
  * @Annotation
  * @Target("PROPERTY")
+ * @author Thomas Beauchataud
+ * @since 04.10.2020
  */
 class InjectParameter
 {
+
+    public ?string $className = null;
+
+    public ?string $propertyName = null;
+
+    public bool $doctrine = false;
 
 }
