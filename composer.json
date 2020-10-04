@@ -28,8 +28,6 @@
         "symfony/validator": "5.1.*"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.1",
-        "symfony/yaml": "*"
     },
     "config": {
         "optimize-autoloader": true,
