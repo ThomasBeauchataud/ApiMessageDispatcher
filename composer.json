@@ -8,6 +8,7 @@
             "email": "thomas.beauchataud@yahoo.fr"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7.4.0",
         "ext-ctype": "*",
