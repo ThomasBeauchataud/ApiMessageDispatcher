@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Converter;
+namespace ApiMessageDispatcher\Converter;
 
 
-use App\Logger\WebServiceLogger;
-use App\Message\Message;
+use ApiMessageDispatcher\Logger\WebServiceLogger;
+use ApiMessageDispatcher\Message\Message;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class RequestConverter
- * @package App\Service
+ * @package ApiMessageDispatcher\Service
  */
 abstract class RequestConverter implements ParamConverterInterface
 {
@@ -105,7 +105,7 @@ abstract class RequestConverter implements ParamConverterInterface
         $matches = array();
         preg_match_all('/[A-Z]/', $class, $matches, PREG_OFFSET_CAPTURE);
         $bundleName = substr($class, 0, $matches[0][1][1]);
-        return "App\Service\\" . $bundleName . "\Message" ;
+        return "ApiMessageDispatcher\Service\\" . $bundleName . "\Message" ;
     }
 
 }

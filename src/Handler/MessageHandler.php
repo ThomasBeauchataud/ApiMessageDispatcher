@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Handler;
+namespace ApiMessageDispatcher\Handler;
 
 
-use App\Logger\LoggerInterface;
-use App\Message\Message;
+use ApiMessageDispatcher\Logger\LoggerInterface;
+use ApiMessageDispatcher\Message\Message;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;

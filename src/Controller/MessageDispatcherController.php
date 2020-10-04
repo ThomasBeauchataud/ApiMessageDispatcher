@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Controller;
+namespace ApiMessageDispatcher\Controller;
 
 
-use App\Message\Message;
-use App\Logger\WebServiceLogger;
+use ApiMessageDispatcher\Message\Message;
+use ApiMessageDispatcher\Logger\WebServiceLogger;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class MessageDispatcherController
- * @package App\Controller
+ * @package ApiMessageDispatcher\Controller
  */
 abstract class MessageDispatcherController extends AbstractController
 {

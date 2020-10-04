@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Message;
+namespace ApiMessageDispatcher\Message;
 
 
 interface Message

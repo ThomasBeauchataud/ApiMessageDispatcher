@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Message;
+namespace ApiMessageDispatcher\Message;
 
 
 use Doctrine\Common\Annotations\Annotation;
@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * Class AutoLoad
- * @package App\Message
+ * @package ApiMessageDispatcher\Message
  * @Annotation
  * @Target("TARGET_PROPERTY")
  */
