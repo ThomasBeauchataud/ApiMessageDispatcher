@@ -4,11 +4,13 @@
 namespace ApiMessageDispatcher\Controller;
 
 
+use ApiMessageDispatcher\Logger\WebServiceLoggerInterface;
 use ApiMessageDispatcher\Message\Message;
 use ApiMessageDispatcher\Logger\ConverterLogger;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -27,22 +29,32 @@ abstract class MessageDispatcherController extends AbstractController
     protected ValidatorInterface $validator;
 
     /**
+     * @var WebServiceLoggerInterface
+     */
+    protected WebServiceLoggerInterface $logger;
+
+    /**
      * MessageDispatcherController constructor.
      * @param ValidatorInterface $validator
+     * @param WebServiceLoggerInterface $logger
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(ValidatorInterface $validator, WebServiceLoggerInterface $logger)
     {
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
 
     /**
+     * @param Request $request
      * @param Message $message
      * @param bool $return
      * @return Response
+     * @throws Exception
      */
-    protected function dispatchAndReturn(Message $message, bool $return = false): Response
+    protected function dispatchAndReturn(Request $request, Message $message, bool $return = false): Response
     {
+        $this->logger->logRequest($request);
         try {
             $errors = $this->validator->validate($message);
             if (count($errors) > 0) {
@@ -55,10 +67,12 @@ abstract class MessageDispatcherController extends AbstractController
             } else {
                 $response = array("response" => "OK");
             }
-            return new Response(json_encode($response));
+            $response = new Response(json_encode($response));
         } catch (Exception $e) {
-            return new Response(json_encode(array("response" => "KO", "error" => $e->getMessage())));
+            $response = new Response(json_encode(array("response" => "KO", "error" => $e->getMessage())));
         }
+        $this->logger->logResponse($response);
+        return $response;
     }
 
 }

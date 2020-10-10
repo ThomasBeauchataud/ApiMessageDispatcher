@@ -4,17 +4,7 @@
 namespace ApiMessageDispatcher\Logger;
 
 
-interface LoggerInterface extends \Psr\Log\LoggerInterface
+interface LoggerInterface extends LoggerSourceInterface
 {
-
-    /**
-     * @return string
-     */
-    public function getSource(): string;
-
-    /**
-     * @param string $source
-     */
-    public function setSource(string $source): void;
 
 }
