@@ -2,7 +2,7 @@
     "name": "tbeauchataud/api-message-dispatcher",
     "description": "Component which permit to easily deploy api application using message, converter and handler",
     "type": "library",
-    "version": "1.0.5",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Thomas Beauchataud",

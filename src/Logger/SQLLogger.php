@@ -35,21 +35,18 @@ class SQLLogger extends AbstractLogger implements \Doctrine\DBAL\Logging\SQLLogg
      */
     private function buildQuery(string $query, ?array $parameters, ?array $types): string
     {
-        while(count($parameters) > 0) {
-            var_dump($parameters[0]);
-            var_dump($types[0]);
-            $replacement = $parameters[0];
-            if ($types[0] == "string") {
-                $replacement = "'" . $parameters[0] . "'";
+        if (!is_null($parameters)) {
+            while (count($parameters) > 0) {
+                $type = array_shift($types);
+                $replacement = array_shift($parameters);
+                if ($type == "string") {
+                    $replacement = "'" . $replacement . "'";
+                }
+                if (is_array($replacement)) {
+                    $replacement = implode(", ", $replacement);
+                }
+                $query = preg_replace("/\?/", $replacement, $query, 1);
             }
-            if (is_array($replacement)) {
-                $replacement = implode(", ", $replacement);
-            }
-            $query = preg_replace("/\?/", $replacement, $query, 1);
-            unset($parameters[0]);
-            unset($types[0]);
-            $parameters = array_values($parameters);
-            $types = array_values($types);
         }
         return $query;
     }

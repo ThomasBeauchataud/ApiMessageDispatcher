@@ -4,7 +4,7 @@
 namespace ApiMessageDispatcher\Logger;
 
 
-interface LoggerInterface extends LoggerSourceInterface
+interface LoggerInterface extends LoggerSourceInterface, \Psr\Log\LoggerInterface
 {
 
 }

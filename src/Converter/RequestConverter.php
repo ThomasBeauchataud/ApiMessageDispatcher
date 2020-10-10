@@ -79,7 +79,7 @@ abstract class RequestConverter implements ParamConverterInterface
     public function apply(Request $request, ParamConverter $configuration): bool
     {
         $object = null;
-        foreach ($this->getSupportedMessages() as $objectClass => $name) {
+        foreach ($this->getSupportedMessages() as $name => $objectClass) {
             if ($configuration->getName() == $name) {
                 $object = $this->instantiateClass($objectClass);
             }
@@ -99,7 +99,7 @@ abstract class RequestConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration): bool
     {
-        foreach ($this->getSupportedMessages() as $name) {
+        foreach ($this->getSupportedMessages() as $name => $object) {
             if ($configuration->getName() == $name) {
                 return true;
             }

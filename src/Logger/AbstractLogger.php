@@ -7,10 +7,10 @@ namespace ApiMessageDispatcher\Logger;
 use DateTime;
 use Exception;
 
-abstract class AbstractLogger implements \Psr\Log\LoggerInterface
+abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerInterface
 {
 
-    private const DEFAULT_PATH = "../var/log/";
+    private CONST DEFAULT_PATH = "../var/log/";
 
     /**
      * @var string|null
