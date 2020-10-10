@@ -38,7 +38,7 @@ class CustomConstraintValidator extends ConstraintValidator
             throw new ApiMessageDispatcherException("");
         }
         $object = $this->em->getRepository($constraint->class)->findOneBy([$constraint->property => $value]);
-        if (is_null($object)) {
+        if ((is_null($object) && $constraint->exists) || (!is_null($object) && !$constraint->exists)) {
             $this->context->buildViolation($this->buildMessage($value, $constraint))
                 ->addViolation();
         }
