@@ -136,7 +136,7 @@ abstract class RequestConverter implements ParamConverterInterface
             /** @var InjectParameter $annotation */
             $annotation = $this->annotationReader->getPropertyAnnotation($reflectionProperty, InjectParameter::class);
             if (!is_null($annotation)) {
-                $this->validateParameters($parameters, $object, $property);
+                $this->validateParameters($parameters, $property);
                 $this->validateAnnotation($annotation);
                 $parameter = $parameters[$property->getName()];
                 $object = $this->injectProperty($property->getName(), $parameter, $object, $annotation);
@@ -170,20 +170,15 @@ abstract class RequestConverter implements ParamConverterInterface
      * Validate the request parameters before trying to inject the property value
      *
      * @param array|null $parameters The request parameters
-     * @param Message $object The object where the property value will be injected
      * @param ReflectionProperty $property The property to inject
-     * @throws ApiMessageDispatcherException If the parameters are null or it doesn't contains the wished property
      */
-    protected function validateParameters(?array $parameters, Message $object, ReflectionProperty $property): void
+    protected function validateParameters(?array &$parameters, ReflectionProperty $property): void
     {
         if ($parameters == null) {
-            $exceptionContent = "Attempt to inject request parameters in the message " . get_class($object)
-                . " but the request content is null";
-            throw new ApiMessageDispatcherException($exceptionContent);
+            $parameters = array();
         }
         if (!array_key_exists($property->getName(), $parameters)) {
-            $exceptionContent = $property . " field doesn't exists in the request content";
-            throw new ApiMessageDispatcherException($exceptionContent);
+            $parameters[$property->getName()] = null;
         }
     }
 
