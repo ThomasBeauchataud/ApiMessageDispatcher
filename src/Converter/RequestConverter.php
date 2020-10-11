@@ -117,7 +117,8 @@ abstract class RequestConverter implements ParamConverterInterface
      */
     protected function enrichProperties(Request $request, Message $object): object
     {
-        $parameters = json_decode($request->getContent(), true);
+        $parameters = array_merge(json_decode($request->getContent(), true), $request->query->all());
+        var_dump($request->query);
         try {
             $reflectionClass = new ReflectionClass($object);
         } catch (ReflectionException $e) {
