@@ -119,7 +119,8 @@ abstract class RequestConverter implements ParamConverterInterface
     {
         $parameters = array_merge(
             json_decode($request->getContent(), true) == null ? array() : json_decode($request->getContent(), true) ,
-            $request->query->all()
+            $request->query->all(),
+            $request->request->all()
         );
         try {
             $reflectionClass = new ReflectionClass($object);
