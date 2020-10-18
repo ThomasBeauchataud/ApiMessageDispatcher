@@ -35,14 +35,35 @@ class CustomConstraintValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint): void
     {
         if ($constraint->property == null || $constraint->class == null) {
-            throw new ApiMessageDispatcherException("");
+            $exceptionContent = "property and class fields cannot be null if equals field is not null on the"
+                . " annotation @CustomConstraint";
+            throw new ApiMessageDispatcherException($exceptionContent);
         }
         $object = $this->em->getRepository($constraint->class)->findOneBy([$constraint->property => $value]);
-        if ((is_null($object) && $constraint->exists) || (!is_null($object) && !$constraint->exists)) {
-            $this->context->buildViolation($this->buildMessage($value, $constraint))
-                ->addViolation();
+        if (!is_null($constraint->exists)) {
+            if (is_null($object) == $constraint->exists) {
+                $this->context->buildViolation($this->buildMessage($value, $constraint))
+                    ->addViolation();
+            }
         }
-
+        if (!is_null($constraint->equals)) {
+            if (is_null($object)) {
+                $exceptionContent = "Impossible to validate a comparison with the annotation @CustomConstraint on a "
+                    . "null object";
+                throw new ApiMessageDispatcherException($exceptionContent);
+            }
+            if ($constraint->compareProperty == null || $constraint->value == null) {
+                $exceptionContent = "compareProperty and value fields cannot be null if equals field is not null on the"
+                . " annotation @CustomConstraint";
+                throw new ApiMessageDispatcherException($exceptionContent);
+            }
+            $methodName = "get" . ucwords($constraint->compareProperty);
+            $comparedValue = call_user_func(array($object, $methodName));
+            if (($comparedValue == $value) != $constraint->equals) {
+                $this->context->buildViolation($this->buildMessage($value, $constraint))
+                    ->addViolation();
+            }
+        }
     }
 
     /**
