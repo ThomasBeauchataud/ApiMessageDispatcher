@@ -33,7 +33,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 abstract class RequestConverter implements ParamConverterInterface
 {
 
-    private const DEFAULT_SOURCE = "converter.log";
+    private const DEFAULT_SOURCE = "converter";
 
     /**
      * @var EntityManagerInterface
