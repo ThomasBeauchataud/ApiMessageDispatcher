@@ -75,4 +75,21 @@ abstract class MessageDispatcherController extends AbstractController
         return $response;
     }
 
+    /**
+     * @param Request $request
+     * @param Message $message
+     * @return mixed
+     * @throws Exception
+     */
+    protected function dispatch(Request $request, Message $message): mixed
+    {
+        $this->logger->logRequest($request);
+        $errors = $this->validator->validate($message);
+        if (count($errors) > 0) {
+            throw new Exception($errors[0]->getMessage());
+        }
+        $envelope = $this->dispatchMessage($message);
+        return $envelope->last(HandledStamp::class)->getResult();
+    }
+
 }
