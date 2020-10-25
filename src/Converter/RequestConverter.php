@@ -14,14 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Abstract class converting request and his parameters to message with injected properties as setup
@@ -52,11 +47,6 @@ abstract class RequestConverter implements ParamConverterInterface
     protected AnnotationReader $annotationReader;
 
     /**
-     * @var SerializerInterface
-     */
-    protected SerializerInterface $serializer;
-
-    /**
      * AbstractRequestConverter constructor.
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -67,9 +57,6 @@ abstract class RequestConverter implements ParamConverterInterface
         $this->logger = $logger;
         $this->logger->setSource(self::DEFAULT_SOURCE);
         $this->annotationReader = new AnnotationReader();
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $this->serializer = new Serializer($normalizers, $encoders);
     }
 
 
@@ -259,14 +246,9 @@ abstract class RequestConverter implements ParamConverterInterface
      */
     protected function log(?array $parameters, Message $message): void
     {
-        try {
-            $serializedObject = $this->serializer->serialize($message, 'json');
-        } catch (Exception $ignored) {
-            $serializedObject = $this->serializer->serialize($message, 'json', array('groups' => get_class($message)));
-        }
-        $content = "Request parameters " . $this->serializer->serialize($parameters, 'json')
+        $content = "Request parameters " . json_encode($parameters)
             . " successfully converter to " . get_class($message) . " : "
-            . $serializedObject;
+            . json_encode($message->serialize());
         $this->logger->info($content);
     }
 

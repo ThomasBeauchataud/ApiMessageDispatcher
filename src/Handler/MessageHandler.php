@@ -8,11 +8,6 @@ use ApiMessageDispatcher\Logger\LoggerInterface;
 use ApiMessageDispatcher\Message\Message;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
-use Exception;
 
 abstract class MessageHandler implements MessageSubscriberInterface
 {
@@ -21,11 +16,6 @@ abstract class MessageHandler implements MessageSubscriberInterface
      * @var EntityManagerInterface
      */
     protected EntityManagerInterface $em;
-
-    /**
-     * @var SerializerInterface
-     */
-    protected SerializerInterface $serializer;
 
     /**
      * @var LoggerInterface
@@ -41,9 +31,6 @@ abstract class MessageHandler implements MessageSubscriberInterface
     {
         $this->em = $em;
         $this->logger = $logger;
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $this->serializer = new Serializer($normalizers, $encoders);
     }
 
     /**
@@ -51,13 +38,8 @@ abstract class MessageHandler implements MessageSubscriberInterface
      */
     protected function log(Message $message): void
     {
-        try {
-            $serializedObject = $this->serializer->serialize($message, 'json');
-        } catch (Exception $ignored) {
-            $serializedObject = $this->serializer->serialize($message, 'json', array('groups' => get_class($message)));
-        }
         $content = "Handling : " . substr(strrchr(get_class($message), "\\"), 1) . " "
-            . $serializedObject;
+            . json_encode($message->serialize());
         $this->logger->info($content);
     }
 

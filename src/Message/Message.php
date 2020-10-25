@@ -13,4 +13,10 @@ namespace ApiMessageDispatcher\Message;
 interface Message
 {
 
+    /**
+     * Serialize a Message into an associative array
+     * @return array
+     */
+    function serialize(): array;
+
 }
