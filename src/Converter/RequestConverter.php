@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -258,9 +259,14 @@ abstract class RequestConverter implements ParamConverterInterface
      */
     protected function log(?array $parameters, Message $message): void
     {
+        try {
+            $serializedObject = $this->serializer->serialize($message, 'json');
+        } catch (Exception $ignored) {
+            $serializedObject = $this->serializer->serialize($message, 'json', array('groups' => get_class($message)));
+        }
         $content = "Request parameters " . $this->serializer->serialize($parameters, 'json')
             . " successfully converter to " . get_class($message) . " : "
-            . $this->serializer->serialize($message, 'json');
+            . $serializedObject;
         $this->logger->info($content);
     }
 

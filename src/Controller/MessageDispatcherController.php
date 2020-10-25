@@ -81,7 +81,7 @@ abstract class MessageDispatcherController extends AbstractController
      * @return mixed
      * @throws Exception
      */
-    protected function dispatch(Request $request, Message $message): mixed
+    protected function dispatch(Request $request, Message $message)
     {
         $this->logger->logRequest($request);
         $errors = $this->validator->validate($message);

@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Exception;
 
 abstract class MessageHandler implements MessageSubscriberInterface
 {
@@ -50,8 +51,13 @@ abstract class MessageHandler implements MessageSubscriberInterface
      */
     protected function log(Message $message): void
     {
+        try {
+            $serializedObject = $this->serializer->serialize($message, 'json');
+        } catch (Exception $ignored) {
+            $serializedObject = $this->serializer->serialize($message, 'json', array('groups' => get_class($message)));
+        }
         $content = "Handling : " . substr(strrchr(get_class($message), "\\"), 1) . " "
-            . $this->serializer->serialize($message, 'json');
+            . $serializedObject;
         $this->logger->info($content);
     }
 
