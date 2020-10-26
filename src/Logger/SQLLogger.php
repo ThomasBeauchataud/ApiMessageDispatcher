@@ -5,6 +5,7 @@ namespace ApiMessageDispatcher\Logger;
 
 
 use Exception;
+use DateTimeInterface;
 
 class SQLLogger extends AbstractLogger implements \Doctrine\DBAL\Logging\SQLLogger
 {
@@ -41,6 +42,9 @@ class SQLLogger extends AbstractLogger implements \Doctrine\DBAL\Logging\SQLLogg
                 $replacement = array_shift($parameters);
                 if ($type == "string") {
                     $replacement = "'" . $replacement . "'";
+                }
+                if ($replacement instanceof DateTimeInterface) {
+                    $replacement = $replacement->format('l d F H:i');
                 }
                 if (is_array($replacement)) {
                     $replacement = implode(", ", $replacement);
