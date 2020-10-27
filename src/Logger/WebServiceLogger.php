@@ -11,15 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterface
 {
 
-    private const PATH = "web_service";
+    protected string $path = "web_service";
 
     /**
      * WebServiceLogger constructor.
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->setSource(self::PATH);
+        $this->setSource($this->path);
     }
 
 

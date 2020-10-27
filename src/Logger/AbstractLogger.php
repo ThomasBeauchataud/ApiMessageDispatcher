@@ -13,21 +13,12 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     /**
      * The root logger path
      */
-    protected const ROOT_PATH = "../var/log/";
+    protected string $rootPath = "../var/log/";
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $source;
-
-    /**
-     * Logger constructor.
-     */
-    public function __construct()
-    {
-        $this->source = null;
-    }
-
+    protected string $source;
 
     /**
      * @inheritDoc
@@ -133,7 +124,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
      */
     protected function getFinalPath(): string
     {
-        return self::ROOT_PATH . $this->source . ".log";
+        return $this->rootPath . $this->source . ".log";
     }
 
     /**
@@ -141,7 +132,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
      */
     private function createNewSourcePath(): void
     {
-        $currentPath = self::ROOT_PATH;
+        $currentPath = $this->rootPath;
         $folders = explode("/", $this->source);
         foreach($folders as $folder) {
             if (array_search($folder, $folders) == count($folders) - 1) {
