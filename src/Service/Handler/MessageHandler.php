@@ -16,52 +16,66 @@ abstract class MessageHandler implements MessageSubscriberInterface
 {
 
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface|null
      */
-    protected EntityManagerInterface $em;
+    protected ?EntityManagerInterface $em;
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
-    protected LoggerInterface $logger;
+    protected ?LoggerInterface $logger;
 
     /**
-     * @var RestClientInterface
+     * @var RestClientInterface|null
      */
-    protected RestClientInterface $restClient;
+    protected ?RestClientInterface $restClient;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParameterBagInterface|null
      */
-    protected ParameterBagInterface $parameters;
+    protected ?ParameterBagInterface $parameters;
 
     /**
-     * @var MessageBusInterface
+     * @var MessageBusInterface|null
      */
-    protected MessageBusInterface $bus;
+    protected ?MessageBusInterface $bus;
 
     /**
-     * MessageHandler constructor.
      * @param EntityManagerInterface $em
-     * @param LoggerInterface $logger
-     * @param RestClientInterface $restClient
-     * @param ParameterBagInterface $parameters
-     * @param MessageBusInterface $bus
      */
-    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, RestClientInterface $restClient, ParameterBagInterface $parameters, MessageBusInterface $bus)
+    public function setEm(EntityManagerInterface $em): void
     {
         $this->em = $em;
-        $this->logger = $logger;
-        $this->restClient = $restClient;
-        $this->parameters = $parameters;
-        $this->bus = $bus;
     }
 
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * @param RestClientInterface $restClient
+     */
+    public function setRestClient(RestClientInterface $restClient): void
+    {
+        $this->restClient = $restClient;
+    }
+
+    /**
+     * @param ParameterBagInterface $parameters
+     */
+    public function setParameters(ParameterBagInterface $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
 
     /**
      * Initialize the handler post construction
      */
-    protected abstract function initialize(): void;
+    public abstract function initialize(): void;
 
     /**
      * @param Message $message
