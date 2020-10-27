@@ -29,4 +29,9 @@ interface WebServiceLoggerInterface extends LoggerSourceInterface
      */
     function logResponse(Response $response): void;
 
+    /**
+     * @param array|null $response
+     */
+    function logDetailResponse(?array $response): void;
+
 }

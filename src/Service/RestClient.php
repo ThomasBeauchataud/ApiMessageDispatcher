@@ -128,7 +128,7 @@ class RestClient implements RestClientInterface
         if (!is_array($response)) {
             $response = array();
         }
-        $this->logger->logResponse($response);
+        $this->logger->logDetailResponse($response);
         return $response;
     }
 

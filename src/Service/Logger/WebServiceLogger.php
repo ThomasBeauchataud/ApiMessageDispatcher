@@ -58,4 +58,18 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
         $this->info($content);
     }
 
+    /**
+     * @inheritDoc
+     * @throws Exception
+     */
+    public function logDetailResponse(?array $response): void
+    {
+        if ($response == null) {
+            $content = "Received null response";
+        } else {
+            $content = "Received response " . json_encode($response);
+        }
+        $this->info($content);
+    }
+
 }
