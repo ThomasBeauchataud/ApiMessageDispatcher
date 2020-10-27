@@ -10,6 +10,7 @@ use ApiMessageDispatcher\Service\RestClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 abstract class MessageHandler implements MessageSubscriberInterface
 {
@@ -35,11 +36,17 @@ abstract class MessageHandler implements MessageSubscriberInterface
     protected ParameterBagInterface $parameters;
 
     /**
+     * @var MessageBusInterface
+     */
+    protected MessageBusInterface $bus;
+
+    /**
      * @param EntityManagerInterface $em
      */
     public function setEm(EntityManagerInterface $em): void
     {
         $this->em = $em;
+        $this->init();
     }
 
     /**
@@ -48,6 +55,7 @@ abstract class MessageHandler implements MessageSubscriberInterface
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
+        $this->init();
     }
 
     /**
@@ -56,6 +64,7 @@ abstract class MessageHandler implements MessageSubscriberInterface
     public function setRestClient(RestClientInterface $restClient): void
     {
         $this->restClient = $restClient;
+        $this->init();
     }
 
     /**
@@ -64,7 +73,37 @@ abstract class MessageHandler implements MessageSubscriberInterface
     public function setParameters(ParameterBagInterface $parameters): void
     {
         $this->parameters = $parameters;
+        $this->init();
     }
+
+    /**
+     * @param MessageBusInterface $bus
+     */
+    public function setBus(MessageBusInterface $bus): void
+    {
+        $this->bus = $bus;
+    }
+
+    /**
+     * Run the initialize if the container is set
+     */
+    protected function init(): void
+    {
+        if (
+            !is_null($this->logger)
+            && !is_null($this->parameters)
+            && !is_null($this->restClient)
+            && !is_null($this->bus)
+            && !is_null($this->em)
+        ) {
+            $this->initialize();
+        }
+    }
+
+    /**
+     * Initialize the handler post construction
+     */
+    protected abstract function initialize(): void;
 
     /**
      * @param Message $message
