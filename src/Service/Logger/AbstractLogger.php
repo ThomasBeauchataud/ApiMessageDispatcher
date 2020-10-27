@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Logger;
+namespace ApiMessageDispatcher\Service\Logger;
 
 
 use DateTime;
@@ -16,18 +16,9 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     protected const ROOT_PATH = "../var/log/";
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $source;
-
-    /**
-     * Logger constructor.
-     */
-    public function __construct()
-    {
-        $this->source = null;
-    }
-
+    protected string $source;
 
     /**
      * @inheritDoc
@@ -139,7 +130,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     /**
      * Create directories to the new path
      */
-    private function createNewSourcePath(): void
+    protected function createNewSourcePath(): void
     {
         $currentPath = self::ROOT_PATH;
         $folders = explode("/", $this->source);

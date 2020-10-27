@@ -4,9 +4,9 @@
 namespace ApiMessageDispatcher\Controller;
 
 
-use ApiMessageDispatcher\Logger\WebServiceLoggerInterface;
-use ApiMessageDispatcher\Message\Message;
-use ApiMessageDispatcher\Logger\ConverterLogger;
+use ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface;
+use ApiMessageDispatcher\Service\Message\Message;
+use ApiMessageDispatcher\Service\Logger\ConverterLogger;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

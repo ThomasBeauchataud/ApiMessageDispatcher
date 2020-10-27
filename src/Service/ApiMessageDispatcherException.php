@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher;
+namespace ApiMessageDispatcher\Service;
 
 
 use Exception;

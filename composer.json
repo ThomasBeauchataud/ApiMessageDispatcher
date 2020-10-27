@@ -1,8 +1,8 @@
 {
     "name": "tbeauchataud/api-message-dispatcher",
     "description": "Component which permit to easily deploy api application using message, converter and handler",
-    "type": "library",
-    "version": "1.0.13",
+    "type": "symfony-bundle",
+    "version": "1.1.0",
     "authors": [
         {
             "name": "Thomas Beauchataud",
@@ -15,6 +15,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-curl": "*",
         "doctrine/annotations": "^1.0",
         "sensio/framework-extra-bundle": "^5.6",
         "symfony/orm-pack": "^2.0",
