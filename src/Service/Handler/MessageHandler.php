@@ -9,10 +9,9 @@ use ApiMessageDispatcher\Service\Message\Message;
 use ApiMessageDispatcher\Service\RestClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-abstract class MessageHandler implements MessageSubscriberInterface
+abstract class MessageHandler
 {
 
     /**

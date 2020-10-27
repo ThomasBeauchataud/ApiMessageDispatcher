@@ -15,6 +15,7 @@ services:
         autoconfigure: true
 
     ApiMessageDispatcher\Service\Handler\MessageHandler:
+        abstract: true
         class: ApiMessageDispatcher\Service\Handler\MessageHandler
         calls:
             - [setLogger, ['@ApiMessageDispatcher\Service\Logger\LoggerInterface']]
