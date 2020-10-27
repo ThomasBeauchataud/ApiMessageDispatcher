@@ -12,14 +12,14 @@ use Exception;
 class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterface
 {
 
-    protected const PATH = "web_service";
+    protected string $path = "web_service";
 
     /**
      * WebServiceLogger constructor.
      */
     public function __construct()
     {
-        $this->setSource(self::PATH);
+        $this->setSource($this->path);
     }
 
 
