@@ -16,29 +16,29 @@ abstract class MessageHandler implements MessageSubscriberInterface
 {
 
     /**
-     * @var EntityManagerInterface|null
+     * @var EntityManagerInterface
      */
-    protected ?EntityManagerInterface $em;
+    protected EntityManagerInterface $em;
 
     /**
-     * @var LoggerInterface|null
+     * @var LoggerInterface
      */
-    protected ?LoggerInterface $logger;
+    protected LoggerInterface $logger;
 
     /**
-     * @var RestClientInterface|null
+     * @var RestClientInterface
      */
-    protected ?RestClientInterface $restClient;
+    protected RestClientInterface $restClient;
 
     /**
-     * @var ParameterBagInterface|null
+     * @var ParameterBagInterface
      */
-    protected ?ParameterBagInterface $parameters;
+    protected ParameterBagInterface $parameters;
 
     /**
-     * @var MessageBusInterface|null
+     * @var MessageBusInterface
      */
-    protected ?MessageBusInterface $bus;
+    protected MessageBusInterface $bus;
 
     /**
      * @param EntityManagerInterface $em
@@ -73,9 +73,9 @@ abstract class MessageHandler implements MessageSubscriberInterface
     }
 
     /**
-     * @param MessageBusInterface|null $bus
+     * @param MessageBusInterface $bus
      */
-    public function setBus(?MessageBusInterface $bus): void
+    public function setBus(MessageBusInterface $bus): void
     {
         $this->bus = $bus;
     }
