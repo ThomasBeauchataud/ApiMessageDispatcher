@@ -1,0 +1,25 @@
+services:
+
+    ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface:
+        class: ApiMessageDispatcher\Service\Logger\WebServiceLogger
+
+    ApiMessageDispatcher\Service\Logger\LoggerInterface:
+        class: ApiMessageDispatcher\Service\Logger\Logger
+
+    ApiMessageDispatcher\Service\Logger\SQLLogger:
+        class: ApiMessageDispatcher\Service\Logger\SQLLogger
+
+    ApiMessageDispatcher\Service\RestClientInterface:
+        class: ApiMessageDispatcher\Service\RestClient
+        autowire: true
+        autoconfigure: true
+
+    ApiMessageDispatcher\Service\Handler\MessageHandler:
+        class: ApiMessageDispatcher\Service\Handler\MessageHandler
+        calls:
+            - [setLogger, ['@ApiMessageDispatcher\Logger\LoggerInterface']]
+            - [setEm, ['@Doctrine\ORM\EntityManagerInterface']]
+            - [setRestClient, ['@ApiMessageDispatcher\Service\RestClientInterface']]
+            - [setParameters, ['@Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface']]
+
+

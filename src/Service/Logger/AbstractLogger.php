@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Logger;
+namespace ApiMessageDispatcher\Service\Logger;
 
 
 use DateTime;
@@ -130,7 +130,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     /**
      * Create directories to the new path
      */
-    private function createNewSourcePath(): void
+    protected function createNewSourcePath(): void
     {
         $currentPath = $this->rootPath;
         $folders = explode("/", $this->source);

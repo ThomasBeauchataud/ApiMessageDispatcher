@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Logger;
+namespace ApiMessageDispatcher\Service\Logger;
 
 
 use Exception;

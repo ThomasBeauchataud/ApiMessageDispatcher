@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Message;
+namespace ApiMessageDispatcher\Service\Message;
 
 
 use Doctrine\Common\Annotations\Annotation;

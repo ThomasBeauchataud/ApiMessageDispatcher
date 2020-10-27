@@ -1,14 +1,14 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Converter;
+namespace ApiMessageDispatcher\Service\Converter;
 
 
 use ApiMessageDispatcher\ApiMessageDispatcherException;
-use ApiMessageDispatcher\Logger\ConverterLogger;
-use ApiMessageDispatcher\Logger\LoggerInterface;
-use ApiMessageDispatcher\Message\InjectParameter;
-use ApiMessageDispatcher\Message\Message;
+use ApiMessageDispatcher\Service\Logger\ConverterLogger;
+use ApiMessageDispatcher\Service\Logger\LoggerInterface;
+use ApiMessageDispatcher\Service\Message\InjectParameter;
+use ApiMessageDispatcher\Service\Message\Message;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;

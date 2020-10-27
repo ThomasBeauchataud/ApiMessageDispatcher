@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Logger;
+namespace ApiMessageDispatcher\Service\Logger;
 
 
 interface LoggerInterface extends LoggerSourceInterface, \Psr\Log\LoggerInterface

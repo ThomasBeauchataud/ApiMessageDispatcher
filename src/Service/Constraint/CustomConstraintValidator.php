@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Constraint;
+namespace ApiMessageDispatcher\Service\Constraint;
 
 
 use ApiMessageDispatcher\ApiMessageDispatcherException;

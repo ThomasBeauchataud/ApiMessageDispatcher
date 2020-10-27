@@ -1,12 +1,13 @@
 <?php
 
 
-namespace ApiMessageDispatcher\Logger;
+namespace ApiMessageDispatcher\Service\Logger;
 
 
-use Exception;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterface
 {
@@ -23,7 +24,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
 
 
     /**
-     * @param Request $request
+     * @inheritDoc
      * @throws Exception
      */
     public function logRequest(Request $request): void
@@ -34,7 +35,17 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
     }
 
     /**
-     * @param Response $response
+     * @inheritDoc
+     * @throws Exception
+     */
+    public function logDetailRequest(string $url, string $method, array $parameters = array()): void
+    {
+        $content = "Requesting " . $method . " " . $url . " with parameters " . json_encode($parameters);
+        $this->info($content);
+    }
+
+    /**
+     * @inheritDoc
      * @throws Exception
      */
     public function logResponse(Response $response): void
