@@ -73,6 +73,14 @@ abstract class MessageHandler implements MessageSubscriberInterface
     }
 
     /**
+     * @param MessageBusInterface|null $bus
+     */
+    public function setBus(?MessageBusInterface $bus): void
+    {
+        $this->bus = $bus;
+    }
+
+    /**
      * Initialize the handler post construction
      */
     public abstract function initialize(): void;
