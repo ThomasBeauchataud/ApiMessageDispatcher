@@ -41,49 +41,27 @@ abstract class MessageHandler implements MessageSubscriberInterface
     protected MessageBusInterface $bus;
 
     /**
+     * MessageHandler constructor.
      * @param EntityManagerInterface $em
-     */
-    public function setEm(EntityManagerInterface $em): void
-    {
-        $this->em = $em;
-    }
-
-    /**
      * @param LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger): void
-    {
-        $this->logger = $logger;
-    }
-
-    /**
      * @param RestClientInterface $restClient
-     */
-    public function setRestClient(RestClientInterface $restClient): void
-    {
-        $this->restClient = $restClient;
-    }
-
-    /**
      * @param ParameterBagInterface $parameters
-     */
-    public function setParameters(ParameterBagInterface $parameters): void
-    {
-        $this->parameters = $parameters;
-    }
-
-    /**
      * @param MessageBusInterface $bus
      */
-    public function setBus(MessageBusInterface $bus): void
+    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, RestClientInterface $restClient, ParameterBagInterface $parameters, MessageBusInterface $bus)
     {
+        $this->em = $em;
+        $this->logger = $logger;
+        $this->restClient = $restClient;
+        $this->parameters = $parameters;
         $this->bus = $bus;
     }
+
 
     /**
      * Initialize the handler post construction
      */
-    public abstract function initialize(): void;
+    protected abstract function initialize(): void;
 
     /**
      * @param Message $message

@@ -16,10 +16,5 @@ services:
 
     ApiMessageDispatcher\Service\Handler\MessageHandler:
         class: ApiMessageDispatcher\Service\Handler\MessageHandler
-        calls:
-            - [setLogger, ['@ApiMessageDispatcher\Logger\LoggerInterface']]
-            - [setEm, ['@Doctrine\ORM\EntityManagerInterface']]
-            - [setRestClient, ['@ApiMessageDispatcher\Service\RestClientInterface']]
-            - [setParameters, ['@Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface']]
-            - [setBus, ['@Symfony\Component\Messenger\MessageBusInterface']]
-            - [initialize]
+        autowire: true
+        autoconfigure: true
