@@ -13,7 +13,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     /**
      * The root logger path
      */
-    protected const ROOT_PATH = "../var/log/";
+    protected string $rootPath = "../var/log/";
 
     /**
      * @var string

@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class ApiMessageDispatcherExtension extends Extension
 {
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +39,6 @@ class ApiMessageDispatcherExtension extends Extension
      */
     public function getAlias()
     {
-        return 'jmose_command_scheduler';
+        return 'api_message_dispatcher';
     }
 }
