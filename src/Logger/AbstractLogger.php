@@ -10,7 +10,10 @@ use Exception;
 abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerInterface
 {
 
-    private CONST DEFAULT_PATH = "../var/log/";
+    /**
+     * The root logger path
+     */
+    protected const ROOT_PATH = "../var/log/";
 
     /**
      * @var string|null
@@ -130,7 +133,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
      */
     protected function getFinalPath(): string
     {
-        return self::DEFAULT_PATH . $this->source . ".log";
+        return self::ROOT_PATH . $this->source . ".log";
     }
 
     /**
@@ -138,7 +141,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
      */
     private function createNewSourcePath(): void
     {
-        $currentPath = self::DEFAULT_PATH;
+        $currentPath = self::ROOT_PATH;
         $folders = explode("/", $this->source);
         foreach($folders as $folder) {
             if (array_search($folder, $folders) == count($folders) - 1) {
