@@ -52,7 +52,6 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     public function setSource(string $source): void
     {
         $this->source = $source;
-        $this->createNewSourcePath();
     }
 
     /**
@@ -130,6 +129,7 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
         if ($this->source == null) {
             throw new Exception("You must define the source of the logger before logging with it");
         }
+        $this->createNewSourcePath();
         $file = fopen($this->getFinalPath(), 'a');
         $date = new DateTime();
         fwrite($file, "[".$date->format('Y-m-d H:i:s') . "] " . $level . ": " . $message . "\n");
