@@ -1,12 +1,24 @@
+parameters:
+    log.root.path: '../var/log/'
+
 services:
 
+    ApiMessageDispatcher\Service\Logger\AbstractLogger:
+        abstract: true
+        class: ApiMessageDispatcher\Service\Logger\AbstractLogger
+        calls:
+            - [setRootPath, ['%log.root.path%']]
+
     ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface:
+        parent: ApiMessageDispatcher\Service\Logger\AbstractLogger
         class: ApiMessageDispatcher\Service\Logger\WebServiceLogger
 
     ApiMessageDispatcher\Service\Logger\LoggerInterface:
+        parent: ApiMessageDispatcher\Service\Logger\AbstractLogger
         class: ApiMessageDispatcher\Service\Logger\Logger
 
     ApiMessageDispatcher\Service\Logger\SQLLogger:
+        parent: ApiMessageDispatcher\Service\Logger\AbstractLogger
         class: ApiMessageDispatcher\Service\Logger\SQLLogger
 
     ApiMessageDispatcher\Service\RestClientInterface:
@@ -24,3 +36,11 @@ services:
             - [setParameters, ['@Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface']]
             - [setBus, ['@Symfony\Component\Messenger\MessageBusInterface']]
             - [initialize]
+
+    ApiMessageDispatcher\Controller\MessageDispatcherController:
+        abstract: true
+        class: ApiMessageDispatcher\Controller\MessageDispatcherController
+        calls:
+            - [setEm, ['@Doctrine\ORM\EntityManagerInterface']]
+            - [setValidator, ['@Symfony\Component\Validator\Validator\ValidatorInterface']]
+            - [setLogger, ['@ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface']]

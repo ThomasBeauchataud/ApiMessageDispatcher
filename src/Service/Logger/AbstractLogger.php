@@ -12,13 +12,31 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
 
     /**
      * The root logger path
+     *
+     * @var string
      */
-    protected string $rootPath = "../var/log/";
+    protected string $rootPath;
 
     /**
      * @var string
      */
     protected string $source;
+
+    /**
+     * @return string
+     */
+    public function getRootPath(): string
+    {
+        return $this->rootPath;
+    }
+
+    /**
+     * @param string $rootPath
+     */
+    public function setRootPath(string $rootPath): void
+    {
+        $this->rootPath = $rootPath;
+    }
 
     /**
      * @inheritDoc

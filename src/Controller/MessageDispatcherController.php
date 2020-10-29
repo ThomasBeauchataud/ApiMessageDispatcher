@@ -7,6 +7,7 @@ namespace ApiMessageDispatcher\Controller;
 use ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface;
 use ApiMessageDispatcher\Service\Message\Message;
 use ApiMessageDispatcher\Service\Logger\ConverterLogger;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,16 +35,33 @@ abstract class MessageDispatcherController extends AbstractController
     protected WebServiceLoggerInterface $logger;
 
     /**
-     * MessageDispatcherController constructor.
-     * @param ValidatorInterface $validator
-     * @param WebServiceLoggerInterface $logger
+     * @var EntityManagerInterface
      */
-    public function __construct(ValidatorInterface $validator, WebServiceLoggerInterface $logger)
+    protected EntityManagerInterface $em;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function setValidator(ValidatorInterface $validator): void
     {
         $this->validator = $validator;
+    }
+
+    /**
+     * @param WebServiceLoggerInterface $logger
+     */
+    public function setLogger(WebServiceLoggerInterface $logger): void
+    {
         $this->logger = $logger;
     }
 
+    /**
+     * @param EntityManagerInterface $em
+     */
+    public function setEm(EntityManagerInterface $em): void
+    {
+        $this->em = $em;
+    }
 
     /**
      * @param Request $request
