@@ -209,7 +209,7 @@ abstract class RequestConverter implements ParamConverterInterface
                 if (count($subObjects) == 1) {
                     $object = $this->injectProperty($propertyName, $subObjects[0], $object);
                 } else if (count($subObjects) == 0) {
-                    return null;
+                    $object = $this->injectProperty($propertyName, null, $object);
                 } else {
                     $object = $this->injectProperty($propertyName, $subObjects, $object);
                 }
