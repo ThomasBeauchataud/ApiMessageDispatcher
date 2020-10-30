@@ -100,10 +100,9 @@ abstract class RequestConverter implements ParamConverterInterface
      *
      * @param Request $request The request with parameters
      * @param Message $object The object to enrich
-     * @return object The object with all his properties injected
-     * @throws ApiMessageDispatcherException
+     * @return Message|null The object with all his properties injected
      */
-    protected function enrichProperties(Request $request, Message $object): ?object
+    protected function enrichProperties(Request $request, Message $object): ?Message
     {
         $parameters = array_merge(
             json_decode($request->getContent(), true) == null ? array() : json_decode($request->getContent(), true) ,
@@ -182,10 +181,9 @@ abstract class RequestConverter implements ParamConverterInterface
      * @param mixed $propertyValue The value of the property to inject
      * @param object $object The object owning the property to inject
      * @param InjectParameter|null $annotation The InjectParameter annotation which override injection rules
-     * @return object Returning the object with injected property
-     * @throws ApiMessageDispatcherException If the object doesn't have a setter method for the property
+     * @return Message|null Returning the object with injected property
      */
-    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?object
+    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?Message
     {
         if ($annotation == null || $annotation->propertyName == null) {
             $methodName = "set" . ucwords($propertyName);
@@ -244,13 +242,13 @@ abstract class RequestConverter implements ParamConverterInterface
      * Log every conversion from request parameters to the instantiated object
      *
      * @param array|null $parameters The request parameters
-     * @param Message $message The message generated
+     * @param Message|null $message The message generated
      */
-    protected function log(?array $parameters, Message $message): void
+    protected function log(?array $parameters, ?Message $message): void
     {
         $content = "Request parameters " . json_encode($parameters)
-            . " successfully converter to " . get_class($message) . " : "
-            . json_encode($message->serialize());
+            . " successfully converter to " . ($message != null ? get_class($message) . " : "
+            . json_encode($message->serialize()) : "null");
         $this->logger->info($content);
     }
 
