@@ -40,7 +40,6 @@ services:
     ApiMessageDispatcher\Controller\MessageDispatcherController:
         abstract: true
         class: ApiMessageDispatcher\Controller\MessageDispatcherController
-        tags: ['controller.service_arguments']
         calls:
             - [setEm, ['@Doctrine\ORM\EntityManagerInterface']]
             - [setValidator, ['@Symfony\Component\Validator\Validator\ValidatorInterface']]
