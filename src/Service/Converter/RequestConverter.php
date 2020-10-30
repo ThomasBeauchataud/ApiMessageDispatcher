@@ -103,7 +103,7 @@ abstract class RequestConverter implements ParamConverterInterface
      * @return object The object with all his properties injected
      * @throws ApiMessageDispatcherException
      */
-    protected function enrichProperties(Request $request, Message $object): object
+    protected function enrichProperties(Request $request, Message $object): ?object
     {
         $parameters = array_merge(
             json_decode($request->getContent(), true) == null ? array() : json_decode($request->getContent(), true) ,
@@ -185,7 +185,7 @@ abstract class RequestConverter implements ParamConverterInterface
      * @return object Returning the object with injected property
      * @throws ApiMessageDispatcherException If the object doesn't have a setter method for the property
      */
-    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): object
+    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?object
     {
         if ($annotation == null || $annotation->propertyName == null) {
             $methodName = "set" . ucwords($propertyName);
@@ -210,6 +210,8 @@ abstract class RequestConverter implements ParamConverterInterface
                     ->findBy([$annotation->propertyName => $propertyValue]);
                 if (count($subObjects) == 1) {
                     $object = $this->injectProperty($propertyName, $subObjects[0], $object);
+                } else if (count($subObjects) == 0) {
+                    return null;
                 } else {
                     $object = $this->injectProperty($propertyName, $subObjects, $object);
                 }
