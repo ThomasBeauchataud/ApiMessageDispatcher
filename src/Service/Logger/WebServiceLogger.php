@@ -27,7 +27,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      * @inheritDoc
      * @throws Exception
      */
-    public function logRequest(Request $request): void
+    public function logIncomingRequest(Request $request): void
     {
         $content = "Receiving " . $request->getMethod(). " request " . $request->getRequestUri() . " with parameters "
             . $request->getContent();
@@ -38,7 +38,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      * @inheritDoc
      * @throws Exception
      */
-    public function logDetailRequest(string $url, string $method, array $parameters = array()): void
+    public function logOutgoingRequest(string $url, string $method, array $parameters = array()): void
     {
         $content = "Requesting " . $method . " " . $url . " with parameters " . json_encode($parameters);
         $this->info($content);
@@ -48,7 +48,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      * @inheritDoc
      * @throws Exception
      */
-    public function logResponse(Response $response): void
+    public function logOutgoingResponse(Response $response): void
     {
         if ($response == null) {
             $content = "Responding null response";
@@ -62,7 +62,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      * @inheritDoc
      * @throws Exception
      */
-    public function logDetailResponse(?array $response): void
+    public function logIncomingResponse(?array $response): void
     {
         if ($response == null) {
             $content = "Received null response";

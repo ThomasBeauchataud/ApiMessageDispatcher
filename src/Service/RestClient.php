@@ -33,7 +33,7 @@ class RestClient implements RestClientInterface
      */
     public function get(string $url, array $parameters = array()): array
     {
-        $this->logger->logDetailRequest($url, "GET", $parameters);
+        $this->logger->logOutgoingRequest($url, "GET", $parameters);
         $ch = curl_init($url . "?" . http_build_query($parameters));
         curl_setopt_array($ch, array(
             CURLOPT_RETURNTRANSFER => TRUE,
@@ -48,7 +48,7 @@ class RestClient implements RestClientInterface
         if (!is_array($response)) {
             $response = array();
         }
-        $this->logger->logDetailResponse($response);
+        $this->logger->logIncomingResponse($response);
         return $response;
     }
 
@@ -57,7 +57,7 @@ class RestClient implements RestClientInterface
      */
     public function post(string $url, array $parameters): array
     {
-        $this->logger->logDetailRequest($url, "POST", $parameters);
+        $this->logger->logOutgoingRequest($url, "POST", $parameters);
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
             CURLOPT_POST => TRUE,
@@ -76,7 +76,7 @@ class RestClient implements RestClientInterface
         if (!is_array($response)) {
             $response = array();
         }
-        $this->logger->logDetailResponse($response);
+        $this->logger->logIncomingResponse($response);
         return $response;
     }
 
@@ -85,7 +85,7 @@ class RestClient implements RestClientInterface
      */
     public function put(string $url, array $parameters): array
     {
-        $this->logger->logDetailRequest($url, "PUT", $parameters);
+        $this->logger->logOutgoingRequest($url, "PUT", $parameters);
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
             CURLOPT_CUSTOMREQUEST => "PUT",
@@ -102,7 +102,7 @@ class RestClient implements RestClientInterface
         if (!is_array($response)) {
             $response = array();
         }
-        $this->logger->logDetailResponse($response);
+        $this->logger->logIncomingResponse($response);
         return $response;
     }
 
@@ -111,7 +111,7 @@ class RestClient implements RestClientInterface
      */
     public function delete(string $url, array $parameters): array
     {
-        $this->logger->logDetailRequest($url, "DELETE", $parameters);
+        $this->logger->logOutgoingRequest($url, "DELETE", $parameters);
         $ch = curl_init($url);
         curl_setopt_array($ch, array(
             CURLOPT_CUSTOMREQUEST => "DELETE",
@@ -128,7 +128,7 @@ class RestClient implements RestClientInterface
         if (!is_array($response)) {
             $response = array();
         }
-        $this->logger->logDetailResponse($response);
+        $this->logger->logIncomingResponse($response);
         return $response;
     }
 

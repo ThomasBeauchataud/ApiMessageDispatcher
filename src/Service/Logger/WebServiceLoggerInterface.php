@@ -14,24 +14,24 @@ interface WebServiceLoggerInterface extends LoggerSourceInterface
      * @param Request $request
      * @throws Exception
      */
-    function logRequest(Request $request): void;
+    function logIncomingRequest(Request $request): void;
 
     /**
      * @param string $url
      * @param string $method
      * @param array $parameters
      */
-    function logDetailRequest(string $url, string $method, array $parameters = array()): void;
+    function logOutgoingRequest(string $url, string $method, array $parameters = array()): void;
 
     /**
      * @param Response $response
      * @throws Exception
      */
-    function logResponse(Response $response): void;
+    function logOutgoingResponse(Response $response): void;
 
     /**
      * @param array|null $response
      */
-    function logDetailResponse(?array $response): void;
+    function logIncomingResponse(?array $response): void;
 
 }

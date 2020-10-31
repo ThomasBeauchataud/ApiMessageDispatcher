@@ -4,7 +4,7 @@
 namespace ApiMessageDispatcher\Service\Converter;
 
 
-use ApiMessageDispatcher\ApiMessageDispatcherException;
+use ApiMessageDispatcher\Service\ApiMessageDispatcherException;
 use ApiMessageDispatcher\Service\Logger\ConverterLogger;
 use ApiMessageDispatcher\Service\Logger\LoggerInterface;
 use ApiMessageDispatcher\Service\Message\InjectParameter;
@@ -101,6 +101,7 @@ abstract class RequestConverter implements ParamConverterInterface
      * @param Request $request The request with parameters
      * @param Message $object The object to enrich
      * @return Message|null The object with all his properties injected
+     * @throws ApiMessageDispatcherException
      */
     protected function enrichProperties(Request $request, Message $object): ?Message
     {
@@ -182,6 +183,7 @@ abstract class RequestConverter implements ParamConverterInterface
      * @param object $object The object owning the property to inject
      * @param InjectParameter|null $annotation The InjectParameter annotation which override injection rules
      * @return Message|null Returning the object with injected property
+     * @throws ApiMessageDispatcherException
      */
     protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?Message
     {

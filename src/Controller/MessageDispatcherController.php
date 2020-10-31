@@ -72,7 +72,7 @@ abstract class MessageDispatcherController extends AbstractController
      */
     protected function dispatchAndReturn(Request $request, Message $message, bool $return = false): Response
     {
-        $this->logger->logRequest($request);
+        $this->logger->logIncomingRequest($request);
         try {
             $errors = $this->validator->validate($message);
             if (count($errors) > 0) {
@@ -89,7 +89,7 @@ abstract class MessageDispatcherController extends AbstractController
         } catch (Exception $e) {
             $response = new Response(json_encode(array("response" => "KO", "error" => $e->getMessage())));
         }
-        $this->logger->logResponse($response);
+        $this->logger->logOutgoingResponse($response);
         return $response;
     }
 
@@ -101,7 +101,7 @@ abstract class MessageDispatcherController extends AbstractController
      */
     protected function dispatch(Request $request, Message $message)
     {
-        $this->logger->logRequest($request);
+        $this->logger->logIncomingRequest($request);
         $errors = $this->validator->validate($message);
         if (count($errors) > 0) {
             throw new Exception($errors[0]->getMessage());
