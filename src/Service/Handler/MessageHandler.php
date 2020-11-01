@@ -89,8 +89,16 @@ abstract class MessageHandler
      */
     protected function log(Message $message): void
     {
-        $content = "Handling : " . substr(strrchr(get_class($message), "\\"), 1) . " "
-            . json_encode($message->serialize());
+        $this->logArray($message->serialize(), substr(strrchr(get_class($message), "\\"), 1));
+    }
+
+    /**
+     * @param array $content
+     * @param string $objectClassName
+     */
+    protected function logArray(array $content, string $objectClassName): void
+    {
+        $content = "Handling : " . $objectClassName . " " . json_encode($content);
         $this->logger->info($content);
     }
 
