@@ -165,4 +165,15 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
         }
     }
 
+    /**
+     * Return the name of the class of the object without the namespace
+     *
+     * @param object $object
+     * @return string
+     */
+    public static function getClassName(object $object): string
+    {
+        return substr(strrchr(get_class($object), "\\"), 1);
+    }
+
 }
