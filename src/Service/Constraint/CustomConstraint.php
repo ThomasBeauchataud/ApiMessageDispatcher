@@ -55,4 +55,12 @@ class CustomConstraint extends Constraint
      */
     public ?string $compareProperty = null;
 
+    /**
+     * @inheritDoc
+     */
+    public function getTargets()
+    {
+        return self::PROPERTY_CONSTRAINT;
+    }
+
 }

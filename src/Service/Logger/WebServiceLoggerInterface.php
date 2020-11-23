@@ -6,6 +6,7 @@ namespace ApiMessageDispatcher\Service\Logger;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 interface WebServiceLoggerInterface extends LoggerSourceInterface
 {

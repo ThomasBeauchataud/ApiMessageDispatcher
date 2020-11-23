@@ -4,13 +4,16 @@
 namespace ApiMessageDispatcher\Service\Constraint;
 
 
-use ApiMessageDispatcher\ApiMessageDispatcherException;
+use ApiMessageDispatcher\Service\ApiMessageDispatcherException;
+use ApiMessageDispatcher\Service\Logger\SQLLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class CustomConstraintValidator extends ConstraintValidator
 {
+
+    private const DEFAULT_SOURCE = "validator";
 
     /**
      * @var EntityManagerInterface
@@ -20,10 +23,13 @@ class CustomConstraintValidator extends ConstraintValidator
     /**
      * CustomConstraintValidator constructor.
      * @param EntityManagerInterface $em
+     * @param SQLLogger $SQLLogger
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SQLLogger $SQLLogger)
     {
         $this->em = $em;
+        $SQLLogger->setSource(self::DEFAULT_SOURCE);
+        $this->em->getConfiguration()->setSQLLogger($SQLLogger);
     }
 
 

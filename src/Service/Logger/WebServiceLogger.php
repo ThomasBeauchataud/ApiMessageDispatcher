@@ -4,7 +4,6 @@
 namespace ApiMessageDispatcher\Service\Logger;
 
 
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -29,8 +28,8 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      */
     public function logIncomingRequest(Request $request): void
     {
-        $content = "Receiving " . $request->getMethod(). " request " . $request->getRequestUri() . " with parameters "
-            . $request->getContent();
+        $content = "Receiving " . $request->getMethod() . " request " . $request->getRequestUri() . " with parameters "
+            . ($request->getContent() == '' ? json_encode($request->request->all()) : $request->getContent());
         $this->info($content);
     }
 
