@@ -35,7 +35,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
     public function logIncomingRequest(Request $request): void
     {
         $content = "Receiving " . $request->getMethod() . " request " . $request->getRequestUri() . " with parameters "
-            . ($request->getContent() == '' ? json_encode($request->request->all()) : $request->getContent());
+            . ($request->getContent() == '' ? json_encode($request->request->all(), true) : $request->getContent());
         $this->info($content);
     }
 
@@ -45,7 +45,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
      */
     public function logOutgoingRequest(string $url, string $method, array $parameters = array()): void
     {
-        $content = "Requesting " . $method . " " . $url . " with parameters " . json_encode($parameters);
+        $content = "Requesting " . $method . " " . $url . " with parameters " . json_encode($parameters, true);
         $this->info($content);
     }
 
@@ -58,7 +58,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
         if ($response == null) {
             $content = "Responding null response";
         } else {
-            $content = "Responding " . json_encode($response->getContent());
+            $content = "Responding " . json_encode($response->getContent(), true);
         }
         $this->info($content);
     }
@@ -72,7 +72,7 @@ class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterfa
         if ($response == null) {
             $content = "Received null response";
         } else {
-            $content = "Received response " . json_encode($response);
+            $content = "Received response " . json_encode($response, true);
         }
         $this->info($content);
     }

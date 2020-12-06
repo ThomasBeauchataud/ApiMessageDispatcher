@@ -110,12 +110,7 @@ abstract class RequestConverter implements ParamConverterInterface
             $request->query->all(),
             $request->request->all()
         );
-        try {
-            $reflectionClass = new ReflectionClass($object);
-        } catch (ReflectionException $e) {
-            $exceptionContent = "Impossible to instantiate the class " . get_class($object) . " : " . $e->getMessage();
-            throw new ApiMessageDispatcherException($exceptionContent);
-        }
+        $reflectionClass = new ReflectionClass($object);
         $properties = $reflectionClass->getProperties();
         foreach ($properties as $property) {
             try {
@@ -190,19 +185,13 @@ abstract class RequestConverter implements ParamConverterInterface
         if ($annotation == null || $annotation->propertyName == null) {
             $methodName = "set" . ucwords($propertyName);
             try {
-                $reflectionClass = new ReflectionClass($object);
-            } catch (ReflectionException $e) {
-                $exceptionContent = "Impossible to instantiate the class " . get_class($object) . " : " . $e->getMessage();
-                throw new ApiMessageDispatcherException($exceptionContent);
-            }
-            try {
-                $reflectionClass->getMethod($methodName);
-            } catch (ReflectionException $e) {
+                call_user_func(array($object, $methodName), $propertyValue);
+            } catch (Exception $e) {
                 $exceptionContent = "The class " . get_class($object) . " doesn't have any setter for the property "
                     . $propertyName . ", expecting a method named " . $methodName;
                 throw new ApiMessageDispatcherException($exceptionContent);
             }
-            call_user_func(array($object, $methodName), $propertyValue);
+
         } else {
             $subObject = $this->instantiateClass($annotation->className);
             if ($annotation->doctrine) {
