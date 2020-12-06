@@ -6,6 +6,7 @@ namespace ApiMessageDispatcher\Service\Logger;
 
 use DateTime;
 use Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerInterface
 {
@@ -23,19 +24,12 @@ abstract class AbstractLogger implements LoggerSourceInterface, \Psr\Log\LoggerI
     protected string $source;
 
     /**
-     * @return string
+     * AbstractLogger constructor.
+     * @param ParameterBagInterface $parameterBag
      */
-    public function getRootPath(): string
+    public function __construct(ParameterBagInterface $parameterBag)
     {
-        return $this->rootPath;
-    }
-
-    /**
-     * @param string $rootPath
-     */
-    public function setRootPath(string $rootPath): void
-    {
-        $this->rootPath = $rootPath;
+        $this->rootPath = $parameterBag->get('kernel.project_dir') . "\\var\\log\\";
     }
 
     /**
