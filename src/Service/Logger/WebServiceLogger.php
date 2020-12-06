@@ -4,6 +4,7 @@
 namespace ApiMessageDispatcher\Service\Logger;
 
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -11,13 +12,18 @@ use Exception;
 class WebServiceLogger extends AbstractLogger implements WebServiceLoggerInterface
 {
 
+    /**
+     * @var string
+     */
     protected string $path = "web_service";
 
     /**
      * WebServiceLogger constructor.
+     * @param ParameterBagInterface $parameterBag
      */
-    public function __construct()
+    public function __construct(ParameterBagInterface $parameterBag)
     {
+        parent::__construct($parameterBag);
         $this->setSource($this->path);
     }
 
