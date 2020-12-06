@@ -19,8 +19,8 @@ services:
     ApiMessageDispatcher\Service\Logger\AbstractLogger:
         abstract: true
         class: ApiMessageDispatcher\Service\Logger\AbstractLogger
-        calls:
-            - [setRootPath, ['%log.root.path%']]
+        autoconfigure: true
+        autowire: true
 
     ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface:
         parent: ApiMessageDispatcher\Service\Logger\AbstractLogger
