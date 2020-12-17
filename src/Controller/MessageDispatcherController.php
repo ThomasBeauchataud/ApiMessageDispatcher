@@ -7,12 +7,13 @@ namespace ApiMessageDispatcher\Controller;
 use ApiMessageDispatcher\Service\Logger\WebServiceLoggerInterface;
 use ApiMessageDispatcher\Service\Message\Message;
 use ApiMessageDispatcher\Service\Logger\ConverterLogger;
+use ApiMessageDispatcher\Service\RestClientInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -35,15 +36,14 @@ abstract class MessageDispatcherController extends AbstractController
     protected WebServiceLoggerInterface $logger;
 
     /**
-     * MessageDispatcherController constructor.
-     * @param WebServiceLoggerInterface $logger
+     * @var EntityManagerInterface
      */
-    public function __construct(WebServiceLoggerInterface $logger)
-    {
-        $this->validator = Validation::createValidator();
-        $this->logger = $logger;
-    }
+    protected EntityManagerInterface $em;
 
+    /**
+     * @var RestClientInterface
+     */
+    protected RestClientInterface $restClient;
 
     /**
      * @param Request $request
@@ -90,6 +90,42 @@ abstract class MessageDispatcherController extends AbstractController
         }
         $envelope = $this->dispatchMessage($message);
         return $envelope->last(HandledStamp::class)->getResult();
+    }
+
+    /**
+     * @required
+     * @param ValidatorInterface $validator
+     */
+    public function setValidator(ValidatorInterface $validator): void
+    {
+        $this->validator = $validator;
+    }
+
+    /**
+     * @required
+     * @param WebServiceLoggerInterface $logger
+     */
+    public function setLogger(WebServiceLoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * @required
+     * @param EntityManagerInterface $em
+     */
+    public function setEm(EntityManagerInterface $em): void
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @required
+     * @param RestClientInterface $restClient
+     */
+    public function setRestClient(RestClientInterface $restClient): void
+    {
+        $this->restClient = $restClient;
     }
 
 }
