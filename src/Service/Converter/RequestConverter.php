@@ -8,7 +8,6 @@ use ApiMessageDispatcher\Service\ApiMessageDispatcherException;
 use ApiMessageDispatcher\Service\Logger\ConverterLogger;
 use ApiMessageDispatcher\Service\Logger\LoggerInterface;
 use ApiMessageDispatcher\Service\Message\InjectParameter;
-use ApiMessageDispatcher\Service\Message\Message;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
@@ -95,10 +94,10 @@ abstract class RequestConverter implements ParamConverterInterface
      *
      * @param Request $request The request with parameters
      * @param object $object The object to enrich
-     * @return Message|null The object with all his properties injected
+     * @return object|null The object with all his properties injected
      * @throws ApiMessageDispatcherException
      */
-    protected function enrichProperties(Request $request, object $object): ?Message
+    protected function enrichProperties(Request $request, object $object): ?object
     {
         $parameters = array_merge(
             json_decode($request->getContent(), true) == null ? array() : json_decode($request->getContent(), true) ,
@@ -171,10 +170,10 @@ abstract class RequestConverter implements ParamConverterInterface
      * @param mixed $propertyValue The value of the property to inject
      * @param object $object The object owning the property to inject
      * @param InjectParameter|null $annotation The InjectParameter annotation which override injection rules
-     * @return Message|null Returning the object with injected property
+     * @return object|null Returning the object with injected property
      * @throws ApiMessageDispatcherException
      */
-    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?Message
+    protected function injectProperty(string $propertyName, $propertyValue, object $object, InjectParameter $annotation = null): ?object
     {
         if ($annotation == null || $annotation->propertyName == null) {
             $methodName = "set" . ucwords($propertyName);
