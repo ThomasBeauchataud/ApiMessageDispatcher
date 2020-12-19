@@ -2,7 +2,7 @@
     "name": "tbeauchataud/api-message-dispatcher",
     "description": "Component which permit to easily deploy api application using message, converter and handler",
     "type": "symfony-bundle",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "authors": [
         {
             "name": "Thomas Beauchataud",
@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0",
+        "php": ">=7.4.7",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",

@@ -72,11 +72,6 @@ abstract class RequestConverter implements ParamConverterInterface
                 $object = $this->instantiateClass($objectClass);
             }
         }
-        if (!($object instanceof Message)) {
-            $exceptionContent = "Provided class in " . RequestConverter::class
-                . ":getSupportedMessages must be instance of " . Message::class;
-            throw new ApiMessageDispatcherException($exceptionContent);
-        }
         $object = $this->enrichProperties($request, $object);
         $request->attributes->set($configuration->getName(), $object);
         return true;
@@ -99,11 +94,11 @@ abstract class RequestConverter implements ParamConverterInterface
      * Set properties of the object with request parameters then return it
      *
      * @param Request $request The request with parameters
-     * @param Message $object The object to enrich
+     * @param object $object The object to enrich
      * @return Message|null The object with all his properties injected
      * @throws ApiMessageDispatcherException
      */
-    protected function enrichProperties(Request $request, Message $object): ?Message
+    protected function enrichProperties(Request $request, object $object): ?Message
     {
         $parameters = array_merge(
             json_decode($request->getContent(), true) == null ? array() : json_decode($request->getContent(), true) ,
@@ -129,7 +124,6 @@ abstract class RequestConverter implements ParamConverterInterface
                 $object = $this->injectProperty($property->getName(), $parameter, $object, $annotation);
             }
         }
-        $this->log($parameters, $object);
         return $object;
     }
 
@@ -227,20 +221,6 @@ abstract class RequestConverter implements ParamConverterInterface
             throw new ApiMessageDispatcherException($exceptionContent);
         }
         return new $className();
-    }
-
-    /**
-     * Log every conversion from request parameters to the instantiated object
-     *
-     * @param array|null $parameters The request parameters
-     * @param Message|null $message The message generated
-     */
-    protected function log(?array $parameters, ?Message $message): void
-    {
-        $content = "Request parameters " . json_encode($parameters)
-            . " successfully converter to " . ($message != null ? get_class($message) . " : "
-            . json_encode($message->serialize()) : "null");
-        $this->logger->info($content);
     }
 
     /**
